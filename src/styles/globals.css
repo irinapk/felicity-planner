@@ -1,6 +1,7 @@
 :root {
 
   --primary-color: #58737D;
+  --primary-color-dark: #2F476A;
 
   --montserrat-font: 
   --max-width: 1100px;
@@ -115,6 +116,26 @@ a {
 ::selection {
   color: white;
   background: #58737D;
+}
+
+::-webkit-scrollbar, 
+*::-webkit-scrollbar {
+  background-color: none !important;
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb, 
+*::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background-color: #7C899370;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover, 
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #7C8993;
 }
 
 @media (prefers-color-scheme: dark) {

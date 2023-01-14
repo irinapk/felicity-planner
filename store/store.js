@@ -14,7 +14,7 @@ const useLoginUser = create(
       },
       signOutUser: () => {
         set((state) => ({
-          userName: "-",
+          userName: "",
           isLogin: false,
         }));
       },

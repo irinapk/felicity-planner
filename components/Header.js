@@ -49,7 +49,7 @@ export default function Header(props) {
       return (
         <div className={styles.username}>
           <PersonIcon />
-          <span>{curUser}</span>
+          <p>{curUser}</p>
         </div>
       );
     } else {
@@ -57,7 +57,7 @@ export default function Header(props) {
       return (
         <div className={styles.username}>
           <PersonIcon />
-          <span>{userName}</span>
+          <p>{userName}</p>
         </div>
       );
     }

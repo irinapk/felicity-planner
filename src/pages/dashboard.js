@@ -9,7 +9,7 @@ export default function DeshboardPage(props) {
   return (
     <>
       <Head>
-        <title>Felicity Dashboard</title>
+        <title>Felicity - Dashboard</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/feli_icon.png" />
       </Head>

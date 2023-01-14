@@ -53,7 +53,9 @@
 
 .username {
   font-size: 20px;
-
+  text-transform: uppercase;
+  font-family: "PoiterOne";
+  font-weight: 600;
   margin: 0 15px;
   color: white;
   display: flex;

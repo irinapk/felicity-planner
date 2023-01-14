@@ -1,15 +1,3 @@
-.main {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6rem;
-  /* min-height: 100%; */
-  flex: 1;
-  /* background-image: url(/images/bg.png);
-  background-size: cover; */
-}
-
 .login {
   background-image: url(/images/login_blur_bg.png);
   background-size: cover;
@@ -25,9 +13,35 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 60px;
   width: 433px;
   height: 387px;
   background: rgba(0, 0, 0, 0.25);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 34px;
+}
+
+.loginBox p {
+  color: white;
+  margin: 10px 0 30px 0;
+}
+
+.loginBox button {
+  color: #58737d;
+  width: 100%;
+  min-height: 60px;
+  text-transform: none;
+  background: #ffffff;
+  border-radius: 20px;
+  font-family: "MontserratAlt";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 16px;
+  border: none;
+}
+
+.loginBox button:hover {
+  color: #ffffff;
+  background: #ffb7b7;
 }

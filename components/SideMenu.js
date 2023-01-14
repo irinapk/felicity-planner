@@ -1,5 +1,6 @@
-import { Button, getMenuItemUtilityClass } from "@mui/material";
+import { Button } from "@mui/material";
 import { Box } from "@mui/system";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const useStyles = {
@@ -64,8 +65,8 @@ const useStyles = {
     },
   },
   plantImg: {
-    width: 230,
-    height: 420,
+    width: 260,
+    height: 500,
     background: `url(/images/plant-img.png) no-repeat`,
     backgroundSize: "contain",
     marginTop: "auto",
@@ -79,35 +80,34 @@ const menuItems = [
   {
     menuIdx: 1,
     menuTitle: "Dashboard",
+    menuUrl: "/dashboard",
   },
   {
     menuIdx: 2,
     menuTitle: "Task Management",
+    menuUrl: "/tasks",
   },
   {
     menuIdx: 3,
     menuTitle: "Open Space",
+    menuUrl: "/open",
   },
   {
     menuIdx: 4,
     menuTitle: "My Page",
+    menuUrl: "/mypage",
   },
 ];
 
 export default function SideMenu(props) {
+  const router = useRouter();
   const [selectedIdx, setSelectedIdx] = useState(1);
-  // let { path, url } = useRouteMatch();
 
-  const onSelectMenu = (idx) => {
+  const onSelectMenu = (idx, url) => {
+    document.getElementById("menu-sound").play();
     setSelectedIdx(idx);
-    // onSelect(idx);
+    router.push(url);
   };
-
-  useEffect(() => {
-    // console.log(url);
-    // console.log(selectedIdx);
-    // console.log(path);
-  }, [selectedIdx]);
 
   return (
     <Box sx={useStyles.menuPanel}>
@@ -122,18 +122,21 @@ export default function SideMenu(props) {
       <div className="menuList">
         {menuItems.map((item) => (
           <Button
+            key={item.menuTitle}
             sx={[
               useStyles.menuButton,
               selectedIdx === item.menuIdx ? useStyles.selectedBtn : null,
             ]}
             disableRipple
-            onClick={() => onSelectMenu(item.menuIdx)}
+            onClick={() => onSelectMenu(item.menuIdx, item.menuUrl)}
           >
             {item.menuTitle}
           </Button>
         ))}
       </div>
-
+      <audio id="menu-sound" controls style={{ display: "none" }}>
+        <source src="/audio/menu_single_click.mp3" type="audio/mpeg" />
+      </audio>
       <Box sx={useStyles.plantImg} />
     </Box>
   );

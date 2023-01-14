@@ -1,13 +1,29 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6rem;
-  /* min-height: 100%; */
+  padding: 30px 60px 60px 60px;
+  min-height: calc(100vh - 80px);
   flex: 1;
-  /* background-image: url(/images/bg.png);
-  background-size: cover; */
+  background-size: cover;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 60px;
+}
+
+.title h1 {
+  color: var(--primary-color);
+  margin-bottom: 10px;
+  font-size: 40px;
+  font-family: "PoiterOne";
+  font-weight: 900;
+}
+
+.title p {
+  color: white;
+  font-size: 15px;
 }
 
 .login {

@@ -1,10 +1,10 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
-import TaskCard from "components/cards/TaskCard";
+import TaskCard from "page-components/task/TaskCard";
 import { Box, Button } from "@mui/material";
-import { textAlign } from "@mui/system";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskCreateDialog from "page-components/task/TaskCreateDialog";
+import { postData } from "utils/postData";
 
 const useStyles = {
   cardBoard: {
@@ -14,7 +14,6 @@ const useStyles = {
       fontSize: "20px",
       width: "100%",
       textAlign: "center",
-      //   marginBottom: "10px",
       color: "var(--primary-color-dark)",
     },
     "& > div": {
@@ -33,10 +32,10 @@ const useStyles = {
   },
 };
 
-export default function TaskPage() {
+export default function TaskPage(props) {
   const [createToDo, setCreateToDo] = useState(false);
-  const [createProg, setCreateProg] = useState(false);
-  const [createDone, setCreateDone] = useState(false);
+
+  const [tasks, setTasks] = useState(props.taskData);
 
   return (
     <>
@@ -57,23 +56,30 @@ export default function TaskPage() {
             <Button sx={useStyles.addBtn} onClick={() => setCreateToDo(true)}>
               New card
             </Button>
-            <TaskCard />
-            <TaskCard />
-            <TaskCard />
+            {tasks.length > 0 &&
+              tasks.map((task) => {
+                if (task.status === "todo") {
+                  return <TaskCard key={task.id} data={task} />;
+                }
+              })}
           </div>
           <div>
             <h4>In Progress</h4>
-            {/* <Button sx={useStyles.addBtn}>New card</Button> */}
-            <TaskCard />
-            <TaskCard />
-            <TaskCard />
+            {tasks.length > 0 &&
+              tasks.map((task) => {
+                if (task.status === "progress") {
+                  return <TaskCard key={task.id} data={task} />;
+                }
+              })}
           </div>
           <div>
             <h4>Done</h4>
-            {/* <Button sx={useStyles.addBtn}>New card</Button> */}
-            <TaskCard />
-            <TaskCard />
-            <TaskCard />
+            {tasks.length > 0 &&
+              tasks.map((task) => {
+                if (task.status === "done") {
+                  return <TaskCard key={task.id} data={task} />;
+                }
+              })}
           </div>
         </Box>
         <TaskCreateDialog
@@ -83,4 +89,17 @@ export default function TaskPage() {
       </section>
     </>
   );
+}
+
+export async function getStaticProps() {
+  const { response, result } = await postData(
+    null,
+    "http://localhost:3000/api/task/getTasks"
+  );
+
+  return {
+    props: {
+      taskData: result,
+    },
+  };
 }

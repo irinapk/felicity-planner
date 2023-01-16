@@ -101,13 +101,27 @@ const menuItems = [
 
 export default function SideMenu(props) {
   const router = useRouter();
-  const [selectedIdx, setSelectedIdx] = useState(1);
+  const [selectedIdx, setSelectedIdx] = useState(0);
 
   const onSelectMenu = (idx, url) => {
     document.getElementById("menu-sound").play();
     setSelectedIdx(idx);
     router.push(url);
   };
+
+  useEffect(() => {
+    let openMenu =
+      selectedIdx !== 0
+        ? menuItems.filter((elm) => elm.menuIdx === selectedIdx)[0]
+        : null;
+
+    if (openMenu === null || openMenu.menuUrl !== router.asPath) {
+      openMenu = menuItems.filter((elm) => elm.menuUrl === router.asPath)[0];
+      setSelectedIdx(openMenu.menuIdx);
+    } else {
+      setSelectedIdx(1);
+    }
+  }, []);
 
   return (
     <Box sx={useStyles.menuPanel}>

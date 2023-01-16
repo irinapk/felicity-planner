@@ -64,9 +64,6 @@ export default function Login(props) {
             style={{ width: "80px", marginBottom: "15px" }}
           />
           <TextField
-            // inputProps={{
-            //   autoComplete: "off",
-            // }}
             autoComplete="off"
             sx={useStyles.userInput}
             placeholder="please enter your name"

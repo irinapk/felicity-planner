@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import { Box } from "@mui/system";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -54,6 +55,7 @@ const useStyles = {
     "&:hover": {
       background: "transparent",
       color: "#7C8993",
+      fontWeight: 600,
     },
   },
   selectedBtn: {
@@ -126,7 +128,12 @@ export default function SideMenu(props) {
   return (
     <Box sx={useStyles.menuPanel}>
       <div className="menuLogo">
-        <img src="/feli_icon_white.png" />
+        <Image
+          src="/feli_icon_white.png"
+          width={60}
+          height={60}
+          alt="felicity_logo"
+        />
         <div>
           <h1>FELICITY</h1>
           <h3>Work Planner</h3>

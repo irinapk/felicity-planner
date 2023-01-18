@@ -121,21 +121,21 @@ a {
 ::-webkit-scrollbar, 
 *::-webkit-scrollbar {
   background-color: none !important;
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
 }
 
 ::-webkit-scrollbar-thumb, 
 *::-webkit-scrollbar-thumb {
-  border-radius: 3px;
-  background-color: #7C899370;
+  border-radius: 4px;
+  background-color: #58737D90;
   border: 1px solid transparent;
   background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover, 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #7C8993;
+  background-color: #58737D;
 }
 
 @media (prefers-color-scheme: dark) {

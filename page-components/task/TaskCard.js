@@ -4,7 +4,7 @@ import { TagSvg } from "../../components/Icons";
 const useStyles = {
   cardBox: {
     width: 300,
-    minHeight: 220,
+    minHeight: 200,
     borderRadius: "10px",
     background: "#F6F6F6",
     boxShadow: "5px 5px 10px 2px rgba(0, 0, 0, 0.25)",
@@ -19,7 +19,7 @@ const useStyles = {
       fontSize: "20px",
       fontWeight: 600,
       padding: "20px",
-      minHeight: 90,
+      minHeight: 70,
     },
     "& > .description": {
       color: "#7C8993",
@@ -50,12 +50,14 @@ const useStyles = {
       marginBlockEnd: 0,
       marginBlockStart: 0,
     },
+    "&:hover": {
+      cursor: "pointer",
+      background: "#fff",
+    },
   },
 };
 
 export default function TaskCard({ data }) {
-  // console.log(data);
-
   let color = "#BCD1A2";
   if (data.priority === 1) {
     color = "#EC7C7C";

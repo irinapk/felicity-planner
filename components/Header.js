@@ -30,7 +30,7 @@ export default function Header(props) {
   const [curUser, setCurUser] = useState(userName);
 
   const handleLogOut = () => {
-    document.getElementById("logout-sound").play();
+    // document.getElementById("logout-sound").play();
     setTimeout(() => {
       router.push("/");
     }, 700);
@@ -77,9 +77,9 @@ export default function Header(props) {
       >
         <LogoutIcon />
       </IconButton>
-      <audio id="logout-sound" controls style={{ display: "none" }}>
+      {/* <audio id="logout-sound" controls style={{ display: "none" }}>
         <source src="/audio/finish_tone.mp3" type="audio/mpeg" />
-      </audio>
+      </audio> */}
     </nav>
   );
 }

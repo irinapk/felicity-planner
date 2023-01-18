@@ -3,18 +3,21 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
-  TextField,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
+import CustomInput from "components/CustomInput";
+import CustomSelect from "components/CustomSelect";
+import { useEffect, useRef, useState } from "react";
+import useLoginUser from "store/store";
+import { postData } from "utils/postData";
 
 export const dialogStyles = {
   dialog: {
-    "& .MuiPaper-root": {
+    "& .MuiDialog-paper": {
       width: 750,
       height: 560,
-      background: "#FFFFFF",
+      backgroundImage: 'url("/images/dialog_bg.jpg")',
+      backgroundSize: "cover",
       boxShadow: "5px 5px 10px 2px rgba(0, 0, 0, 0.25)",
       borderRadius: "10px",
     },
@@ -42,6 +45,9 @@ export const dialogStyles = {
     "& > div": {
       display: "flex",
       alignItems: "center",
+      "& > div": {
+        width: 220,
+      },
     },
     "& span": {
       fontWeight: 400,
@@ -53,22 +59,6 @@ export const dialogStyles = {
   },
   inputField: {
     height: 40,
-
-    "& input": {
-      height: 30,
-      color: "#222",
-      fontSize: "16px",
-      fontWeight: 600,
-      fontFamily: "MontserratAlt",
-      background: "#F5F5F5",
-      border: "none",
-      padding: "5px 10px",
-      borderRadius: "5px",
-    },
-    "& fieldset": {
-      height: 40,
-      border: "none",
-    },
   },
   actionBtn: {
     display: "flex",
@@ -97,37 +87,154 @@ export const dialogStyles = {
   },
 };
 
+// {
+//   id: task.id,
+//   assignedTo: task.assignedUsers,
+//   completeDt: null,
+//   description: task.description,
+//   dueDt: task.dueDt,
+//   priority: task.priority,
+//   regUser: task.regUser,
+//   status: task.status,
+//   title: task.title,
+// },
+
+function isEmpty(field) {
+  if (typeof field === "string") {
+    return field.trim() === "";
+  } else if (typeof field === "object") {
+    return field === null || field === undefined || field === [];
+  }
+}
+
 export default function TaskCreateDialog(props) {
-  const { open, onClose } = props;
+  const { open, onClose, totalTasks, updateData } = props;
+  const regUser = useLoginUser((state) => state.userName);
+
+  const [users, setUsers] = useState([]);
+  const priorityLevels = [
+    { name: "high", value: 1 },
+    { name: "medium", value: 2 },
+    { name: "low", value: 3 },
+  ];
+
+  const newTask = useRef();
+
+  const [taskId, setTaskId] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [assignedUsers, setAssignedUsers] = useState([]);
+  const [dueDt, setDueDt] = useState("");
+  const [priority, setPriority] = useState(3);
+
+  const saveNewTask = async (task) => {
+    const { response } = await postData(task, "/api/task/addTask");
+    console.log(response);
+    return response;
+  };
+
+  const fetchUsers = async () => {
+    const { result } = await postData(null, "/api/user/getUsers");
+    let userArr = [];
+    result.map((user) => {
+      userArr.push({ name: user.name, value: user });
+    });
+    return userArr;
+  };
+
+  useEffect(() => {
+    if (open && users.length === 0) {
+      fetchUsers().then((arr) => setUsers(arr));
+    }
+    if (totalTasks) setTaskId("task0" + (totalTasks + 1));
+  }, [open]);
+
+  const onSaveTask = () => {
+    newTask.current = {
+      id: taskId,
+      assignedTo: assignedUsers,
+      completeDt: null,
+      description: description,
+      dueDt: dueDt,
+      priority: priority,
+      regUser: regUser,
+      status: "todo",
+      title: title,
+    };
+
+    saveNewTask({ task: newTask.current }).then((response) => {
+      console.log(response);
+
+      onCloseDialog();
+      if (response.status === 200) {
+        updateData();
+      }
+    });
+  };
+
+  let saveBlock =
+    isEmpty(title) ||
+    isEmpty(description) ||
+    isEmpty(assignedUsers) ||
+    isEmpty(dueDt);
+
+  const onCloseDialog = () => {
+    console.log("on close");
+    setTitle("");
+    setDescription("");
+    setAssignedUsers([]);
+    setDueDt("");
+    setPriority(3);
+
+    onClose();
+  };
 
   return (
-    <Dialog open={open} sx={dialogStyles.dialog} onClose={onClose}>
+    <Dialog open={open} sx={dialogStyles.dialog} onClose={onCloseDialog}>
       <DialogTitle sx={dialogStyles.title}>new task</DialogTitle>
       <DialogContent sx={dialogStyles.content}>
         <div>
           <span>title</span>
-          <TextField sx={dialogStyles.inputField} />
+          <CustomInput value={title} onChangeValue={setTitle} required />
         </div>
         <div>
           <span>description</span>
-          <TextField sx={dialogStyles.inputField} />
+          <CustomInput
+            value={description}
+            onChangeValue={setDescription}
+            required
+          />
         </div>
         <div>
           <span>assigned to</span>
-          <TextField sx={dialogStyles.inputField} />
+          <CustomSelect
+            multiple={true}
+            value={assignedUsers}
+            onSelectValue={setAssignedUsers}
+            required={true}
+            items={users}
+            style={{ width: "100%" }}
+          />
         </div>
         <div>
           <span>due date</span>
-          <TextField sx={dialogStyles.inputField} />
+          <CustomInput onChangeValue={setDueDt} required />
         </div>
         <div>
-          <span>importance</span>
-          <TextField sx={dialogStyles.inputField} />
+          <span>priority</span>
+          <CustomSelect
+            value={priority}
+            onSelectValue={setPriority}
+            required={true}
+            items={priorityLevels}
+          />
         </div>
       </DialogContent>
       <DialogActions sx={dialogStyles.actionBtn}>
-        <Button onClick={onClose}>back</Button>
-        <Button onClick={onClose}>ok</Button>
+        <Button onClick={onCloseDialog}>back</Button>
+        <Button disabled={saveBlock} onClick={onSaveTask}>
+          ok
+        </Button>
       </DialogActions>
     </Dialog>
   );

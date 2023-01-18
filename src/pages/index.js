@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import useLoginUser from "store/store";
 import { Button, TextField } from "@mui/material";
+import Image from "next/image";
 
 const useStyles = {
   userInput: {
@@ -59,9 +60,12 @@ export default function Login(props) {
       </Head>
       <div className={styles.login}>
         <div className={styles.loginBox}>
-          <img
+          <Image
             src="/feli_icon.png"
-            style={{ width: "80px", marginBottom: "15px" }}
+            alt="felicity_icon"
+            width={80}
+            height={80}
+            style={{ marginBottom: "15px" }}
           />
           <TextField
             autoComplete="off"

@@ -1,0 +1,46 @@
+/* animated fading circles for data loading effect */
+.loadingBox {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  height: 10px;
+  align-items: center;
+}
+
+.loadingCircle {
+  background-color: #2f476a;
+  border-radius: 50%;
+  animation: fade 2s ease-in-out infinite;
+}
+@keyframes fade {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 1;
+    filter: blur(0.5px);
+  }
+  25% {
+    width: 9px;
+    height: 9px;
+    opacity: 0.8;
+    filter: blur(0.5px);
+  }
+  50% {
+    width: 8px;
+    height: 8px;
+    opacity: 0.6;
+    filter: blur(0.5px);
+  }
+  75% {
+    width: 7px;
+    height: 7px;
+    opacity: 0.5;
+    filter: blur(1px);
+  }
+  100% {
+    width: 6px;
+    height: 6px;
+    opacity: 0.3;
+    filter: blur(2px);
+  }
+}

@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { TagSvg } from "../../components/Icons";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const useStyles = {
   cardBox: {
@@ -57,13 +58,32 @@ const useStyles = {
   },
 };
 
-export default function TaskCard({ data }) {
+export default function TaskCard({ data, updateData }) {
   let color = "#BCD1A2";
   if (data.priority === 1) {
     color = "#EC7C7C";
   } else if (data.priority === 2) {
     color = "#7E7E7E";
   }
+
+  const deleteTask = async (id) => {
+    const res = await fetch("/api/task/deleteTask", {
+      method: "POST",
+      "Content-Type": "application/json",
+      body: JSON.stringify(id),
+    });
+    const { result } = await res.json();
+    console.log(result);
+    return result;
+  };
+
+  const onDelete = async () => {
+    deleteTask({ id: data.id }).then((res) => {
+      if (res["deleted_hashes"] && res["deleted_hashes"] !== null) {
+        updateData();
+      }
+    });
+  };
 
   return (
     <Box sx={useStyles.cardBox}>
@@ -73,7 +93,14 @@ export default function TaskCard({ data }) {
           <p className="card-title">{data.title}</p>
           <p className="description">{data.description}</p>
           <div>
-            <p className="due-date">Due date: {data.dueDt}</p>
+            <p className="due-date">
+              Due date: {data.dueDt}
+              <DeleteIcon
+                fontSize="small"
+                htmlColor="#C6C5C8"
+                onClick={onDelete}
+              />
+            </p>
             <Box
               className="avatar"
               sx={{ backgroundImage: `url("${data.assignedTo[0].avatar}")` }}

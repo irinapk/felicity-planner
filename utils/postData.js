@@ -9,13 +9,4 @@ export const postData = async (data, url) => {
   const response = await fetch(url, requestOptions);
   const result = await response.json();
   return { response, result };
-
-  // return new Promise((resolve, reject) => {
-  //   const response = await fetch(url, requestOptions);
-  //   const result = response.json();
-  // })
-  //   .then((res) => {
-  //     resolve(res);
-  //   })
-  //   .catch((err) => console.log(err));
 };

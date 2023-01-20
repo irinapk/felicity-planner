@@ -1,11 +1,15 @@
 import { getUsers } from "common/api";
-import handler from "middleware/_defaultHandler";
 
-export default handler.post(async (req, res) => {
+const fetchInfo = async () => {
+  const response = await getUsers();
+  return response;
+};
+
+export default async function handler(req, res) {
   try {
-    const { response, result } = await getUsers();
-    return res.status(response.status).json(result);
+    const result = await fetchInfo();
+    return res.status(200).json(result);
   } catch (err) {
     return res.status(500).json({ error: err });
   }
-});
+}

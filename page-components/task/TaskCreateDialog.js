@@ -4,12 +4,12 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import Button from "@mui/material/Button";
+import { getUsers } from "common/api";
+import { CancelButton, OkButton } from "components/CustomButtons";
 import CustomInput from "components/CustomInput";
 import CustomSelect from "components/CustomSelect";
 import { useEffect, useRef, useState } from "react";
 import useLoginUser from "store/store";
-import { postData } from "utils/postData";
 
 export const dialogStyles = {
   dialog: {
@@ -57,47 +57,14 @@ export const dialogStyles = {
       color: "var(--primary-color-dark)",
     },
   },
-  inputField: {
-    height: 40,
-  },
   actionBtn: {
     display: "flex",
     alignItems: "center",
     columnGap: "10px",
     justifyContent: "center",
     padding: "25px",
-    "& button": {
-      color: "#FFF",
-      fontFamily: "MontserratAlt",
-      border: "none",
-      width: 72,
-      height: 72,
-      borderRadius: "50%",
-      textTransform: "none",
-      "&:hover": {
-        filter: "brightness(90%)",
-      },
-    },
-    "& > button:first-of-type": {
-      background: "#FFB7B7",
-    },
-    "& > button:last-of-type": {
-      background: "#BDC8AF",
-    },
   },
 };
-
-// {
-//   id: task.id,
-//   assignedTo: task.assignedUsers,
-//   completeDt: null,
-//   description: task.description,
-//   dueDt: task.dueDt,
-//   priority: task.priority,
-//   regUser: task.regUser,
-//   status: task.status,
-//   title: task.title,
-// },
 
 function isEmpty(field) {
   if (typeof field === "string") {
@@ -108,7 +75,7 @@ function isEmpty(field) {
 }
 
 export default function TaskCreateDialog(props) {
-  const { open, onClose, totalTasks, updateData } = props;
+  const { open, onClose, updateData } = props;
   const regUser = useLoginUser((state) => state.userName);
 
   const [users, setUsers] = useState([]);
@@ -120,7 +87,6 @@ export default function TaskCreateDialog(props) {
 
   const newTask = useRef();
 
-  const [taskId, setTaskId] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [assignedUsers, setAssignedUsers] = useState([]);
@@ -128,13 +94,19 @@ export default function TaskCreateDialog(props) {
   const [priority, setPriority] = useState(3);
 
   const saveNewTask = async (task) => {
-    const { response } = await postData(task, "/api/task/addTask");
-    console.log(response);
-    return response;
+    const res = await fetch("/api/task/addTask", {
+      method: "POST",
+      "Content-Type": "application/json",
+      body: JSON.stringify(task),
+    });
+    const { result } = await res.json();
+    return result;
   };
 
   const fetchUsers = async () => {
-    const { result } = await postData(null, "/api/user/getUsers");
+    const res = await fetch("/api/user/getUsers", { method: "POST" });
+    const { result } = await res.json();
+
     let userArr = [];
     result.map((user) => {
       userArr.push({ name: user.name, value: user });
@@ -146,12 +118,10 @@ export default function TaskCreateDialog(props) {
     if (open && users.length === 0) {
       fetchUsers().then((arr) => setUsers(arr));
     }
-    if (totalTasks) setTaskId("task0" + (totalTasks + 1));
   }, [open]);
 
   const onSaveTask = () => {
     newTask.current = {
-      id: taskId,
       assignedTo: assignedUsers,
       completeDt: null,
       description: description,
@@ -162,11 +132,9 @@ export default function TaskCreateDialog(props) {
       title: title,
     };
 
-    saveNewTask({ task: newTask.current }).then((response) => {
-      console.log(response);
-
+    saveNewTask({ task: newTask.current }).then((res) => {
       onCloseDialog();
-      if (response.status === 200) {
+      if (res.inserted_hashes && res.inserted_hashes !== null) {
         updateData();
       }
     });
@@ -179,13 +147,11 @@ export default function TaskCreateDialog(props) {
     isEmpty(dueDt);
 
   const onCloseDialog = () => {
-    console.log("on close");
     setTitle("");
     setDescription("");
     setAssignedUsers([]);
     setDueDt("");
     setPriority(3);
-
     onClose();
   };
 
@@ -231,10 +197,8 @@ export default function TaskCreateDialog(props) {
         </div>
       </DialogContent>
       <DialogActions sx={dialogStyles.actionBtn}>
-        <Button onClick={onCloseDialog}>back</Button>
-        <Button disabled={saveBlock} onClick={onSaveTask}>
-          ok
-        </Button>
+        <CancelButton onClick={onCloseDialog} />
+        <OkButton disabled={saveBlock} onClick={onSaveTask} />
       </DialogActions>
     </Dialog>
   );

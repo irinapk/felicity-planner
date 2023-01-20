@@ -8,9 +8,9 @@ const inputStyle = {
     "& input": {
       height: 30,
       color: "#222",
-      fontSize: "16px",
-      fontWeight: 500,
-      fontFamily: "MontserratAlt",
+      fontSize: "18px",
+      fontWeight: 600,
+      fontFamily: "PoiterOne",
       background: "#FFFFFF",
       border: "none",
       padding: "5px 16px",

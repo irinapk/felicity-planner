@@ -10,9 +10,9 @@ const selectStyle = {
     "& .MuiSelect-select": {
       height: 30,
       color: "#222",
-      fontSize: "16px",
-      fontWeight: 500,
-      fontFamily: "MontserratAlt",
+      fontSize: "18px",
+      fontWeight: 600,
+      fontFamily: "PoiterOne",
       lineHeight: "30px",
       background: "#FFFFFF",
       border: "none",
@@ -54,8 +54,8 @@ const selectStyle = {
       marginTop: "2px",
       boxShadow: "none",
       "& .MuiMenuItem-root": {
-        fontFamily: "MontserratAlt",
-        fontSize: "16px",
+        fontFamily: "PoiterOne",
+        fontSize: "18px",
         "&.Mui-selected": {
           backgroundColor: "#FFF",
           fontWeight: 600,

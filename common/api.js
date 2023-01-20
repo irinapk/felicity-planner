@@ -1,8 +1,6 @@
-import { DB_AUTH, DB_URL } from "constants/constants";
-
 const myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
-myHeaders.append("Authorization", `Basic ${DB_AUTH}`);
+myHeaders.append("Authorization", `Basic ${process.env.DB_AUTH}`);
 
 // ************** USER API  ************** //
 export const createUser = async (id, name) => {
@@ -24,7 +22,7 @@ export const createUser = async (id, name) => {
     redirect: "follow",
   };
 
-  const response = await fetch(DB_URL, requestOptions);
+  const response = await fetch(process.env.DB_URL, requestOptions);
   const result = await response.json();
   return { response, result };
 };
@@ -42,7 +40,7 @@ export const getUsers = async () => {
     redirect: "follow",
   };
 
-  const response = await fetch(DB_URL, requestOptions);
+  const response = await fetch(process.env.DB_URL, requestOptions);
   const result = await response.json();
   return { response, result };
 };
@@ -62,7 +60,7 @@ export const deleteUser = async (id) => {
     redirect: "follow",
   };
 
-  const response = await fetch(DB_URL, requestOptions);
+  const response = await fetch(process.env.DB_URL, requestOptions);
   const result = await response.json();
   return { response, result };
 };
@@ -82,7 +80,7 @@ export const getTasks = async () => {
     redirect: "follow",
   };
 
-  const response = await fetch(DB_URL, requestOptions);
+  const response = await fetch(process.env.DB_URL, requestOptions);
   const result = await response.json();
   return { response, result };
 };
@@ -94,7 +92,6 @@ export const createTask = async (task) => {
     table: "tasks",
     records: [
       {
-        id: task.id,
         assignedTo: task.assignedTo,
         completeDt: null,
         description: task.description,
@@ -113,9 +110,13 @@ export const createTask = async (task) => {
     redirect: "follow",
   };
 
-  const response = await fetch(DB_URL, requestOptions);
-  const result = await response.json();
-  return { response, result };
+  try {
+    const response = await fetch(process.env.DB_URL, requestOptions);
+    const result = await response.json();
+    return { response, result };
+  } catch (err) {
+    return { error: err };
+  }
 };
 
 export const deleteTask = async (id) => {
@@ -133,11 +134,37 @@ export const deleteTask = async (id) => {
     redirect: "follow",
   };
 
-  const response = await fetch(DB_URL, requestOptions);
-  const result = await response.json();
-  return { response, result };
+  try {
+    const response = await fetch(process.env.DB_URL, requestOptions);
+    const result = await response.json();
+    return { response, result };
+  } catch (err) {
+    return { error: err };
+  }
+  // const response = await fetch(process.env.DB_URL, requestOptions);
+  // const result = await response.json();
+  // return { response, result };
 };
 
 // ************** POST API  ************** //
 
 // ************** COMMENT API  ************** //
+
+// ************** OPEN SOURCE DATA API  ************** //
+export const getRandomQuote = async () => {
+  const ninjasHeaders = new Headers();
+  ninjasHeaders.append("Content-Type", "application/json");
+  ninjasHeaders.append("X-Api-Key", `${process.env.NINJA_API_KEY}`);
+
+  const requestOptions = {
+    method: "GET",
+    headers: ninjasHeaders,
+  };
+
+  const response = await fetch(
+    process.env.NINJA_API_URL + "/quotes?category=computers",
+    requestOptions
+  );
+  const result = await response.json();
+  return { response, result };
+};

@@ -4,9 +4,8 @@
   padding: 10px 60px 40px 60px;
   min-height: 800px;
   height: calc(100vh - 80px);
-  max-height: calc(100vh - 80px);
-  overflow-y: scroll;
   flex: 1;
+  overflow: "hidden";
   background-size: cover;
 }
 

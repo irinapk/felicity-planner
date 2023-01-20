@@ -11,10 +11,10 @@ const useStyles = {
     alignItems: "center",
     background: "white",
     height: "100vh",
+    minHeight: 880,
     width: 330,
     maxWidth: 330,
     minWidth: 290,
-
     boxShadow: "3px 0px 20px rgba(0, 0, 0, 0.25)",
     "& .menuLogo": {
       display: "flex",
@@ -48,7 +48,7 @@ const useStyles = {
     minWidth: 250,
     width: "100%",
     height: 50,
-    fontFamily: "MontserratAlt",
+    fontFamily: "PoiterOne",
     color: "#7C8993",
     borderRadius: 15,
     background: "transparent",
@@ -119,7 +119,7 @@ export default function SideMenu(props) {
 
     if (openMenu === null || openMenu.menuUrl !== router.asPath) {
       openMenu = menuItems.filter((elm) => elm.menuUrl === router.asPath)[0];
-      setSelectedIdx(openMenu.menuIdx);
+      if (openMenu) setSelectedIdx(openMenu.menuIdx);
     } else {
       setSelectedIdx(1);
     }

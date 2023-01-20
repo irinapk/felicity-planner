@@ -1,13 +1,16 @@
 import { createTask } from "common/api";
-import handler from "middleware/_defaultHandler";
 
-export default handler.post(async (req, res) => {
-  const { task } = req.body;
+const fetchInfo = async (task) => {
+  const response = await createTask(task);
+  return response;
+};
 
+export default async function handler(req, res) {
+  const { task } = JSON.parse(req.body);
   try {
-    const { response, result } = await createTask(task);
-    return res.status(response.status).json(result);
+    const result = await fetchInfo(task);
+    return res.status(200).json(result);
   } catch (err) {
     return res.status(500).json({ error: err });
   }
-});
+}

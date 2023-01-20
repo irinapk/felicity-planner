@@ -4,9 +4,8 @@ import TaskCard from "page-components/task/TaskCard";
 import { Box, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TaskCreateDialog from "page-components/task/TaskCreateDialog";
-import { postData } from "utils/postData";
 import { LoadingBalls } from "components/Loading";
-import { resolve } from "styled-jsx/css";
+import { getTasks } from "common/api";
 
 const useStyles = {
   cardBoard: {
@@ -53,6 +52,7 @@ const useStyles = {
     rowGap: "20px",
     padding: "0 15px 20px 15px",
     maxHeight: "calc(100vh - 315px)",
+    minHeight: 540,
     overflowY: "overlay",
   },
 };
@@ -60,19 +60,27 @@ const useStyles = {
 export default function TaskPage(props) {
   const [createToDo, setCreateToDo] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [update, setUpdate] = useState(true);
+  const [update, setUpdate] = useState(false);
 
   const [tasks, setTasks] = useState([]);
 
   const fetchData = async () => {
-    console.log("fetching tasks");
-    const { response, result } = await postData(null, "/api/task/getTasks");
-    setLoading(false);
-    setTasks(result);
+    const res = await fetch("/api/task/getTasks", { method: "POST" });
+    const { result } = await res.json();
+    if (result !== props.tasks) setTasks(result);
+    setUpdate(false);
   };
 
   useEffect(() => {
-    fetchData();
+    if (update) {
+      fetchData();
+    }
+    if (tasks.length === 0 && props.tasks) {
+      setTimeout(() => {
+        setLoading(false);
+        setTasks(props.tasks);
+      }, 300);
+    }
   }, [update]);
 
   return (
@@ -91,7 +99,7 @@ export default function TaskPage(props) {
         <Box display="flex" sx={useStyles.cardBoard}>
           <div>
             <div>
-              <h4>To Do</h4>
+              <h4>TO DO</h4>
               <Button sx={useStyles.addBtn} onClick={() => setCreateToDo(true)}>
                 New card
               </Button>
@@ -106,42 +114,64 @@ export default function TaskPage(props) {
               {tasks.length > 0 &&
                 tasks.map((task) => {
                   if (task.status === "todo") {
-                    return <TaskCard key={task.id} data={task} />;
+                    return (
+                      <TaskCard
+                        updateData={() => setUpdate(!update)}
+                        key={task.id}
+                        data={task}
+                      />
+                    );
                   }
                 })}
             </Box>
           </div>
           <div>
             <div>
-              <h4>In Progress</h4>
+              <h4>IN PROGRESS</h4>
             </div>
             {loading && (
               <Box sx={useStyles.loadingArea}>
                 <LoadingBalls />
               </Box>
             )}
-            {tasks.length > 0 &&
-              tasks.map((task) => {
-                if (task.status === "progress") {
-                  return <TaskCard key={task.id} data={task} />;
-                }
-              })}
+            <Box sx={useStyles.cardsArea}>
+              {tasks.length > 0 &&
+                tasks.map((task) => {
+                  if (task.status === "progress") {
+                    return (
+                      <TaskCard
+                        updateData={() => setUpdate(!update)}
+                        key={task.id}
+                        data={task}
+                      />
+                    );
+                  }
+                })}
+            </Box>
           </div>
           <div>
             <div>
-              <h4>Done</h4>
+              <h4>DONE</h4>
             </div>
             {loading && (
               <Box sx={useStyles.loadingArea}>
                 <LoadingBalls />
               </Box>
             )}
-            {tasks.length > 0 &&
-              tasks.map((task) => {
-                if (task.status === "done") {
-                  return <TaskCard key={task.id} data={task} />;
-                }
-              })}
+            <Box sx={useStyles.cardsArea}>
+              {tasks.length > 0 &&
+                tasks.map((task) => {
+                  if (task.status === "done") {
+                    return (
+                      <TaskCard
+                        updateData={() => setUpdate(true)}
+                        key={task.id}
+                        data={task}
+                      />
+                    );
+                  }
+                })}
+            </Box>
           </div>
         </Box>
         <TaskCreateDialog
@@ -150,22 +180,19 @@ export default function TaskPage(props) {
           onClose={() => {
             setCreateToDo(false);
           }}
-          updateData={() => setUpdate(!update)}
+          updateData={() => setUpdate(true)}
         />
       </section>
     </React.Fragment>
   );
 }
 
-// export async function getStaticProps() {
-//   const { response, result } = await postData(
-//     null,
-//     "http://localhost:3000/api/task/getTasks"
-//   );
+export async function getServerSideProps() {
+  const res = await getTasks();
 
-//   return {
-//     props: {
-//       taskData: result,
-//     },
-//   };
-// }
+  return {
+    props: {
+      tasks: res.result,
+    },
+  };
+}

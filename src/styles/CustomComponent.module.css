@@ -44,3 +44,67 @@
     filter: blur(2px);
   }
 }
+
+/* button styles */
+.okBtn,
+.cancelBtn {
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  text-transform: none;
+}
+
+.okBtn {
+  background: #bdc8af;
+}
+
+.cancelBtn {
+  background: #ffb7b7;
+}
+
+.okBtn:hover:not(:disabled),
+.cancelBtn:hover:not(:disabled) {
+  filter: brightness(90%);
+}
+
+.okBtn:disabled,
+.cancelBtn:disabled {
+  background: rgba(124, 137, 147, 0.48);
+  color: #97a3b4;
+}
+
+.lightBtn {
+  min-width: 100px;
+  height: 35px;
+  color: var(--primary-color-dark);
+  background: #ffffff;
+  border-radius: 20px;
+  border: none;
+  text-transform: none;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.lightBtn:hover {
+  background: var(--primary-color-dark);
+  color: #ffffff;
+}
+
+.colorBtn {
+  min-width: 100px;
+  height: 35px;
+  color: #ffffff;
+  background: #c6c5c8;
+  border-radius: 20px;
+  border: none;
+  text-transform: none;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.colorBtn:hover {
+  background: #ffb7b7;
+}

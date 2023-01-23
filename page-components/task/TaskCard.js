@@ -1,6 +1,8 @@
 import { Box } from "@mui/material";
 import { TagSvg } from "../../components/Icons";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ConfirmDialog from "components/ConfirmDialog";
+import { useState } from "react";
 
 const useStyles = {
   cardBox: {
@@ -36,9 +38,16 @@ const useStyles = {
       alignItems: "flex-end",
     },
     "& .due-date": {
-      fontSize: "12px",
-      color: "#2B2F2F",
-      marginBlockEnd: 0,
+      display: "flex",
+      gap: "15px",
+      alignItems: "flex-end",
+      "& p": {
+        fontSize: "12px",
+        color: "#2B2F2F",
+      },
+      "& svg:hover": {
+        color: "var(--primary-color-dark)",
+      },
     },
     "& .avatar": {
       width: 35,
@@ -59,6 +68,8 @@ const useStyles = {
 };
 
 export default function TaskCard({ data, updateData }) {
+  const [openConfirm, setOpenConfirm] = useState(false);
+
   let color = "#BCD1A2";
   if (data.priority === 1) {
     color = "#EC7C7C";
@@ -73,7 +84,6 @@ export default function TaskCard({ data, updateData }) {
       body: JSON.stringify(id),
     });
     const { result } = await res.json();
-    console.log(result);
     return result;
   };
 
@@ -83,6 +93,7 @@ export default function TaskCard({ data, updateData }) {
         updateData();
       }
     });
+    setOpenConfirm(false);
   };
 
   return (
@@ -93,21 +104,36 @@ export default function TaskCard({ data, updateData }) {
           <p className="card-title">{data.title}</p>
           <p className="description">{data.description}</p>
           <div>
-            <p className="due-date">
-              Due date: {data.dueDt}
+            <div className="due-date">
+              <p>Due date: {data.dueDt}</p>
               <DeleteIcon
                 fontSize="small"
                 htmlColor="#C6C5C8"
-                onClick={onDelete}
+                onClick={() => setOpenConfirm(true)}
               />
-            </p>
-            <Box
-              className="avatar"
-              sx={{ backgroundImage: `url("${data.assignedTo[0].avatar}")` }}
-            />
+            </div>
+            <Box sx={{ position: "relative", height: 30 }}>
+              {data.assignedTo.map((assignee, idx) => (
+                <Box
+                  key={assignee.name + idx}
+                  className="avatar"
+                  style={{ right: `${15 * idx}px` }}
+                  sx={{
+                    position: "absolute",
+                    backgroundImage: `url("${assignee.avatar}")`,
+                  }}
+                />
+              ))}
+            </Box>
           </div>
         </>
       )}
+      <ConfirmDialog
+        open={openConfirm}
+        content={"Are you sure you want to delete this task?"}
+        onClose={() => setOpenConfirm(false)}
+        onOk={onDelete}
+      />
     </Box>
   );
 }

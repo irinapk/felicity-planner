@@ -3,10 +3,15 @@ import { useState } from "react";
 
 const inputStyle = {
   textField: {
-    height: 40,
+    minHeight: 40,
     minWidth: 150,
+    "& .MuiInputBase-root": {
+      minHeight: 30,
+      padding: "0px !important",
+      background: "#FFFFFF",
+    },
     "& input": {
-      height: 30,
+      minHeight: 30,
       color: "#222",
       fontSize: "18px",
       fontWeight: 600,
@@ -19,8 +24,23 @@ const inputStyle = {
         opacity: 0.6,
       },
     },
+    "& textarea:first-of-type": {
+      minHeight: 30,
+      height: "110px !important",
+      color: "#222",
+      fontSize: "18px",
+      fontWeight: 600,
+      fontFamily: "PoiterOne",
+      background: "#FFFFFF",
+      padding: "5px 16px",
+      border: "none",
+      borderRadius: "5px",
+      "&::placeholder": {
+        opacity: 0.6,
+      },
+    },
     "& fieldset": {
-      height: 40,
+      minHeight: 40,
       top: 0,
       borderRadius: "5px",
       border: "1px solid #7C8993",
@@ -41,12 +61,16 @@ const inputStyle = {
   },
 };
 
-export default function CustomInput({
-  onChangeValue,
-  style,
-  placeholder,
-  required = false,
-}) {
+export default function CustomInput(props) {
+  const {
+    onChangeValue,
+    style,
+    placeholder,
+    required = false,
+    multiline = false,
+    minRows,
+    maxRows,
+  } = props;
   const [error, setError] = useState(false);
 
   const verifyValue = (value) => {
@@ -59,6 +83,9 @@ export default function CustomInput({
 
   return (
     <TextField
+      minRows
+      maxRows
+      multiline={multiline}
       error={error}
       autoComplete="off"
       placeholder={placeholder}

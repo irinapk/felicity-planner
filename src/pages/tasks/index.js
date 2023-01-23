@@ -79,7 +79,7 @@ export default function TaskPage(props) {
       setTimeout(() => {
         setLoading(false);
         setTasks(props.tasks);
-      }, 300);
+      }, 200);
     }
   }, [update]);
 

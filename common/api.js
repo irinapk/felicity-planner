@@ -141,12 +141,109 @@ export const deleteTask = async (id) => {
   } catch (err) {
     return { error: err };
   }
-  // const response = await fetch(process.env.DB_URL, requestOptions);
-  // const result = await response.json();
-  // return { response, result };
 };
 
 // ************** POST API  ************** //
+
+export const getPosts = async () => {
+  const raw = JSON.stringify({
+    operation: "sql",
+    sql: "SELECT *, DATE_FORMAT(__createdtime__, 'YYYY-MM-DD HH:mm:ss') as createdDt, DATE_FORMAT(__updatedtime__, 'YYYY-MM-DD HH:mm:ss') as updatedDt from feli_dev.posts",
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  const response = await fetch(process.env.DB_URL, requestOptions);
+  const result = await response.json();
+  return { response, result };
+};
+
+export const addPostLike = async (id, likes) => {
+  const raw = JSON.stringify({
+    operation: "update",
+    schema: "feli_dev",
+    table: "posts",
+    records: [
+      {
+        id: id,
+        likes: likes,
+      },
+    ],
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  const response = await fetch(process.env.DB_URL, requestOptions);
+  const result = await response.json();
+  return { response, result };
+};
+
+export const createPost = async (task) => {
+  const raw = JSON.stringify({
+    operation: "insert",
+    schema: "feli_dev",
+    table: "posts",
+    records: [
+      {
+        author: {
+          name: task.author,
+          avatar: "/images/profiles/trooper.png",
+        },
+        content: post.content,
+        likes: 0,
+        title: post.title,
+      },
+    ],
+  });
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(process.env.DB_URL, requestOptions);
+    const result = await response.json();
+    return { response, result };
+  } catch (err) {
+    return { error: err };
+  }
+};
+
+export const deletePost = async (id) => {
+  const raw = JSON.stringify({
+    operation: "delete",
+    table: "posts",
+    schema: "feli_dev",
+    hash_values: [id],
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(process.env.DB_URL, requestOptions);
+    const result = await response.json();
+    return { response, result };
+  } catch (err) {
+    return { error: err };
+  }
+};
 
 // ************** COMMENT API  ************** //
 

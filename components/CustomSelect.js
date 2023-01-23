@@ -83,7 +83,6 @@ export default function CustomSelect(props) {
   const [error, setError] = useState(false);
 
   const verifyValue = (v) => {
-    console.log("vefifying", v, value);
     if (
       required &&
       (v === null || v === undefined || v?.length === 0) &&

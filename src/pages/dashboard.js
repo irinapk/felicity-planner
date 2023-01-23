@@ -43,7 +43,24 @@ export default function DashboardPage(props) {
           <p>Your current work progress state at one glance.</p>
         </div>
         <div className={dashboardStyles.gridBox}>
-          <div></div>
+          <div className={dashboardStyles.userListArea}>
+            <h2>Your team members</h2>
+            <div>
+              {userList.length > 0 &&
+                userList.map((user) => (
+                  <div key={user.id}>
+                    <Image
+                      src={user.avatar}
+                      width={60}
+                      height={60}
+                      alt={user.name + "_image"}
+                      style={{ borderRadius: "50%" }}
+                    />
+                    <p>{user.name}</p>
+                  </div>
+                ))}
+            </div>
+          </div>
           <div className={dashboardStyles.quote}>
             <FormatQuoteIcon
               sx={{ fontSize: "80px", mr: "20px" }}
@@ -62,20 +79,7 @@ export default function DashboardPage(props) {
           <div>
             <Box sx={{ height: 340 }} />
           </div>
-          <div>
-            {userList.length > 0 &&
-              userList.map((user) => (
-                <div key={user.id}>
-                  <Image
-                    src={user.avatar}
-                    width={30}
-                    height={30}
-                    alt={user.name + "_image"}
-                  />
-                  <p>{user.name}</p>
-                </div>
-              ))}
-          </div>
+          <div></div>
           <div></div>
           <div>
             <Box sx={{ height: 140 }} />

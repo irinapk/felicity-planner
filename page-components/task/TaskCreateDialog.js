@@ -15,7 +15,7 @@ export const dialogStyles = {
   dialog: {
     "& .MuiDialog-paper": {
       width: 750,
-      height: 560,
+      height: "max-content",
       backgroundImage: 'url("/images/dialog_bg.jpg")',
       backgroundSize: "cover",
       boxShadow: "5px 5px 10px 2px rgba(0, 0, 0, 0.25)",
@@ -169,6 +169,9 @@ export default function TaskCreateDialog(props) {
             value={description}
             onChangeValue={setDescription}
             required
+            multiline
+            minRows={3}
+            maxRows={5}
           />
         </div>
         <div>

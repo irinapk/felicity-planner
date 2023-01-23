@@ -1,5 +1,4 @@
 import styles from "@/styles/CustomComponent.module.css";
-import { Button } from "@mui/material";
 
 function OkButton(props) {
   return (
@@ -19,17 +18,17 @@ function CancelButton(props) {
 
 function LightButton(props) {
   return (
-    <Button {...props} className={styles.lightBtn}>
+    <button {...props} className={styles.lightBtn}>
       {props.children}
-    </Button>
+    </button>
   );
 }
 
 function ColorButton(props) {
   return (
-    <Button {...props} className={styles.colorBtn}>
+    <button {...props} className={styles.colorBtn}>
       {props.children}
-    </Button>
+    </button>
   );
 }
 

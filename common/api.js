@@ -70,7 +70,7 @@ export const deleteUser = async (id) => {
 export const getTasks = async () => {
   const raw = JSON.stringify({
     operation: "sql",
-    sql: "SELECT *, DATE_FORMAT(__createdtime__, 'YYYY-MM-DD HH:mm:ss') as createdDt, DATE_FORMAT(__updatedtime__, 'YYYY-MM-DD HH:mm:ss') as updatedDt from feli_dev.tasks",
+    sql: "SELECT *, DATE_FORMAT(__createdtime__, 'YYYY-MM-DD HH:mm:ss') as createdDt, DATE_FORMAT(__updatedtime__, 'YYYY-MM-DD HH:mm:ss') as updatedDt from feli_dev.tasks order by createdDt",
   });
 
   const requestOptions = {
@@ -148,7 +148,25 @@ export const deleteTask = async (id) => {
 export const getPosts = async () => {
   const raw = JSON.stringify({
     operation: "sql",
-    sql: "SELECT *, DATE_FORMAT(__createdtime__, 'YYYY-MM-DD HH:mm:ss') as createdDt, DATE_FORMAT(__updatedtime__, 'YYYY-MM-DD HH:mm:ss') as updatedDt from feli_dev.posts",
+    sql: "SELECT *, DATE_FORMAT(__createdtime__, 'YYYY-MM-DD HH:mm:ss') as createdDt, DATE_FORMAT(__updatedtime__, 'YYYY-MM-DD HH:mm:ss') as updatedDt from feli_dev.posts order by createdDt desc",
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  const response = await fetch(process.env.DB_URL, requestOptions);
+  const result = await response.json();
+  return { response, result };
+};
+
+export const getPostDetail = async (id) => {
+  const raw = JSON.stringify({
+    operation: "sql",
+    sql: `SELECT *, DATE_FORMAT(__createdtime__, 'YYYY-MM-DD HH:mm:ss') as createdDt from feli_dev.posts where id="${id}"`,
   });
 
   const requestOptions = {
@@ -188,7 +206,7 @@ export const addPostLike = async (id, likes) => {
   return { response, result };
 };
 
-export const createPost = async (task) => {
+export const createPost = async (post) => {
   const raw = JSON.stringify({
     operation: "insert",
     schema: "feli_dev",
@@ -196,7 +214,7 @@ export const createPost = async (task) => {
     records: [
       {
         author: {
-          name: task.author,
+          name: post.author,
           avatar: "/images/profiles/trooper.png",
         },
         content: post.content,
@@ -246,6 +264,98 @@ export const deletePost = async (id) => {
 };
 
 // ************** COMMENT API  ************** //
+
+export const getComments = async () => {
+  const raw = JSON.stringify({
+    operation: "sql",
+    sql: "SELECT *, DATE_FORMAT(__createdtime__, 'YYYY-MM-DD HH:mm') as createdDt from feli_dev.comments order by createdDt",
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  const response = await fetch(process.env.DB_URL, requestOptions);
+  const result = await response.json();
+  return { response, result };
+};
+
+export const getCommentsForPost = async (id) => {
+  const raw = JSON.stringify({
+    operation: "sql",
+    sql: `SELECT *, DATE_FORMAT(__createdtime__, 'YYYY-MM-DD HH:mm') as createdDt from feli_dev.comments where postID="${id}" order by createdDt`,
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  const response = await fetch(process.env.DB_URL, requestOptions);
+  const result = await response.json();
+  return { response, result };
+};
+
+export const createComment = async (comment) => {
+  const raw = JSON.stringify({
+    operation: "insert",
+    schema: "feli_dev",
+    table: "comments",
+    records: [
+      {
+        author: {
+          name: comment.author,
+          avatar: "/images/profiles/trooper.png",
+        },
+        content: comment.content,
+        postID: comment.postID,
+      },
+    ],
+  });
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(process.env.DB_URL, requestOptions);
+    const result = await response.json();
+    return { response, result };
+  } catch (err) {
+    return { error: err };
+  }
+};
+
+export const deleteComment = async (id) => {
+  const raw = JSON.stringify({
+    operation: "delete",
+    table: "comments",
+    schema: "feli_dev",
+    hash_values: [id],
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(process.env.DB_URL, requestOptions);
+    const result = await response.json();
+    return { response, result };
+  } catch (err) {
+    return { error: err };
+  }
+};
 
 // ************** OPEN SOURCE DATA API  ************** //
 export const getRandomQuote = async () => {

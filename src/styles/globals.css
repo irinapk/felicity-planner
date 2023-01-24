@@ -58,8 +58,8 @@ a {
 ::-webkit-scrollbar, 
 *::-webkit-scrollbar {
   background: none !important;
-  width: 9px;
-  height: 9px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-thumb, 

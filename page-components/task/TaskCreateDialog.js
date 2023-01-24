@@ -93,16 +93,6 @@ export default function TaskCreateDialog(props) {
   const [dueDt, setDueDt] = useState("");
   const [priority, setPriority] = useState(3);
 
-  const saveNewTask = async (task) => {
-    const res = await fetch("/api/task/addTask", {
-      method: "POST",
-      "Content-Type": "application/json",
-      body: JSON.stringify(task),
-    });
-    const { result } = await res.json();
-    return result;
-  };
-
   const fetchUsers = async () => {
     const res = await fetch("/api/user/getUsers", { method: "POST" });
     const { result } = await res.json();
@@ -119,6 +109,16 @@ export default function TaskCreateDialog(props) {
       fetchUsers().then((arr) => setUsers(arr));
     }
   }, [open]);
+
+  const saveNewTask = async (task) => {
+    const res = await fetch("/api/task/addTask", {
+      method: "POST",
+      "Content-Type": "application/json",
+      body: JSON.stringify(task),
+    });
+    const { result } = await res.json();
+    return result;
+  };
 
   const onSaveTask = () => {
     newTask.current = {

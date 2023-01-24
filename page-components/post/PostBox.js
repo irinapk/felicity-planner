@@ -2,6 +2,9 @@ import { Box, Button } from "@mui/material";
 import Image from "next/image";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import ConfirmDialog from "components/ConfirmDialog";
+import { useState } from "react";
 
 const useStyles = {
   post: {
@@ -18,6 +21,7 @@ const useStyles = {
       flexDirection: "column",
       "& .content": {
         flex: 1,
+        fontSize: "18px",
       },
     },
     "& .title": {
@@ -53,6 +57,12 @@ const useStyles = {
     alignItems: "center",
     marginRight: "40px",
     fontWeight: "bold",
+    "& > span": {
+      marginTop: "4px",
+      background: "#E0E7EB",
+      borderRadius: "5px",
+      padding: "3px 10px",
+    },
   },
   postBtn: {
     borderRadius: "20px",
@@ -74,7 +84,8 @@ const useStyles = {
 };
 
 export default function PostBox(props) {
-  const { post, updateData } = props;
+  const { post, comments, onClick, updateData, currentUser } = props;
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
 
   const onClickLike = () => {
     updatePost({ id: post.id, likes: post.likes + 1 }).then((res) => {
@@ -92,12 +103,29 @@ export default function PostBox(props) {
     return result;
   };
 
+  const onClickDelete = () => {
+    deletePost({ id: post.id }).then((res) => {
+      setOpenDeleteConfirm(false);
+      updateData();
+    });
+  };
+
+  const deletePost = async (id) => {
+    const res = await fetch("/api/post/deletePost", {
+      method: "POST",
+      "Content-Type": "application/json",
+      body: JSON.stringify(id),
+    });
+    const { result } = await res.json();
+    return result;
+  };
+
   return (
     <Box display="flex" sx={useStyles.post}>
       <Box sx={useStyles.author}>
         <Image
-          src={post.author.avatar}
-          alt={post.author.name}
+          src={post?.author?.avatar}
+          alt={post?.author?.name}
           width={50}
           height={50}
           style={{ borderRadius: "50%" }}
@@ -110,18 +138,46 @@ export default function PostBox(props) {
           <p>{post.title}</p>
           <span>{post.createdDt}</span>
         </div>
-        <p className="content">{post.content}</p>
+
+        <div
+          className="content"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
+
         <div className="post-footer">
-          <Button sx={useStyles.postBtn} onClick={onClickLike}>
-            <FavoriteBorderIcon fontSize={"16px"} />
-            {post.likes}
-          </Button>
-          <Button sx={useStyles.postBtn}>
-            <InsertCommentOutlinedIcon fontSize="16px" />
-            Comments &#40;10&#41;
-          </Button>
+          {currentUser === post.author.name && (
+            <Button
+              sx={useStyles.postBtn}
+              onClick={() => {
+                setOpenDeleteConfirm(true);
+              }}
+            >
+              <RemoveCircleOutlineIcon fontSize={"16px"} />
+              Delete post
+            </Button>
+          )}
+          {currentUser && (
+            <Button sx={useStyles.postBtn} onClick={onClickLike}>
+              <FavoriteBorderIcon fontSize={"16px"} />
+              {post.likes}
+            </Button>
+          )}
+
+          {comments && (
+            <Button sx={useStyles.postBtn} onClick={onClick}>
+              <InsertCommentOutlinedIcon fontSize="16px" />
+              Comments &#40;{comments[post.id] ? comments[post.id].length : "0"}
+              &#41;
+            </Button>
+          )}
         </div>
       </div>
+      <ConfirmDialog
+        open={openDeleteConfirm}
+        onClose={() => setOpenDeleteConfirm(false)}
+        content="Are you sure you want to delete this post?"
+        onOk={onClickDelete}
+      />
     </Box>
   );
 }

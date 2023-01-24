@@ -65,11 +65,11 @@ export default function CustomInput(props) {
   const {
     onChangeValue,
     style,
-    placeholder,
+    placeholder = "",
     required = false,
     multiline = false,
-    minRows,
-    maxRows,
+    minRows = 1,
+    maxRows = 1,
   } = props;
   const [error, setError] = useState(false);
 
@@ -83,8 +83,8 @@ export default function CustomInput(props) {
 
   return (
     <TextField
-      minRows
-      maxRows
+      minRows={minRows}
+      maxRows={maxRows}
       multiline={multiline}
       error={error}
       autoComplete="off"

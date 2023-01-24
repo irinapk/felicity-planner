@@ -44,7 +44,7 @@ export default function DashboardPage(props) {
         </div>
         <div className={dashboardStyles.gridBox}>
           <div className={dashboardStyles.userListArea}>
-            <h2>Your team members</h2>
+            <h2>Team members</h2>
             <div>
               {userList.length > 0 &&
                 userList.map((user) => (

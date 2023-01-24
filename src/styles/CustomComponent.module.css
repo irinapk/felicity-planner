@@ -55,6 +55,7 @@
   height: 72px;
   border-radius: 50%;
   text-transform: none;
+  font-family: PoiterOne;
 }
 
 .okBtn {
@@ -86,6 +87,7 @@
   text-transform: none;
   font-size: 16px;
   font-weight: 600;
+  font-family: PoiterOne;
 }
 
 .lightBtn:hover {
@@ -103,8 +105,29 @@
   text-transform: none;
   font-size: 16px;
   font-weight: 600;
+  font-family: PoiterOne;
 }
 
 .colorBtn:hover {
   background: #ffb7b7;
+}
+
+.editor {
+  width: 100%;
+}
+
+.editor * {
+  font-family: "PoiterOne";
+  color: var(--primary-color-dark) !important;
+}
+
+.editor > div > div:first-child {
+  background: #58737d50;
+}
+
+.editor > div > div:last-child {
+  padding: 25px 30px;
+  background: white;
+  max-height: 120px;
+  overflow: overlay;
 }

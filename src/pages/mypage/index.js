@@ -58,8 +58,9 @@ const useStyles = {
   editBtn: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "center",
     columnGap: "6px",
-    width: 130,
+    width: "130px",
   },
   stats: {
     maxWidth: "100%",
@@ -150,7 +151,7 @@ export default function MyUserPage() {
                 <span>
                   <ColorButton
                     onClick={() => setIsEditing(true)}
-                    sx={useStyles.editBtn}
+                    style={useStyles.editBtn}
                   >
                     <span>edit</span>
                     <EditIcon fontSize="16px" htmlColor="#FFF" />
@@ -160,13 +161,13 @@ export default function MyUserPage() {
                 <span>
                   <ColorButton
                     onClick={() => setIsEditing(false)}
-                    sx={useStyles.editBtn}
+                    style={useStyles.editBtn}
                   >
                     <span>cancel</span>
                   </ColorButton>
                   <LightButton
                     onClick={() => setIsEditing(false)}
-                    sx={useStyles.editBtn}
+                    style={useStyles.editBtn}
                   >
                     <span>save</span>
                   </LightButton>

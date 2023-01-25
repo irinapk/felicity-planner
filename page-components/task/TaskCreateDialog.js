@@ -6,6 +6,7 @@ import {
 } from "@mui/material";
 import { getUsers } from "common/api";
 import { CancelButton, OkButton } from "components/CustomButtons";
+import CustomDatePicker from "components/CustomDatePicker";
 import CustomInput from "components/CustomInput";
 import CustomSelect from "components/CustomSelect";
 import { useEffect, useRef, useState } from "react";
@@ -75,7 +76,7 @@ function isEmpty(field) {
 }
 
 export default function TaskCreateDialog(props) {
-  const { open, onClose, updateData } = props;
+  const { open, onClose, updateData, totalTodoTasks } = props;
   const regUser = useLoginUser((state) => state.userName);
 
   const [users, setUsers] = useState([]);
@@ -126,6 +127,7 @@ export default function TaskCreateDialog(props) {
       completeDt: null,
       description: description,
       dueDt: dueDt,
+      position: totalTodoTasks,
       priority: priority,
       regUser: regUser,
       status: "todo",
@@ -161,7 +163,12 @@ export default function TaskCreateDialog(props) {
       <DialogContent sx={dialogStyles.content}>
         <div>
           <span>title</span>
-          <CustomInput value={title} onChangeValue={setTitle} required />
+          <CustomInput
+            value={title}
+            maxLength={80}
+            onChangeValue={setTitle}
+            required
+          />
         </div>
         <div>
           <span>description</span>
@@ -170,6 +177,7 @@ export default function TaskCreateDialog(props) {
             onChangeValue={setDescription}
             required
             multiline
+            maxLength={300}
             minRows={3}
             maxRows={5}
           />
@@ -187,7 +195,9 @@ export default function TaskCreateDialog(props) {
         </div>
         <div>
           <span>due date</span>
-          <CustomInput onChangeValue={setDueDt} required />
+          {/* <CustomInput onChangeValue={setDueDt} required /> */}
+
+          <CustomDatePicker onChangeDate={setDueDt} required />
         </div>
         <div>
           <span>priority</span>

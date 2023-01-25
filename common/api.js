@@ -70,7 +70,7 @@ export const deleteUser = async (id) => {
 export const getTasks = async () => {
   const raw = JSON.stringify({
     operation: "sql",
-    sql: "SELECT *, DATE_FORMAT(__createdtime__, 'YYYY-MM-DD HH:mm:ss') as createdDt, DATE_FORMAT(__updatedtime__, 'YYYY-MM-DD HH:mm:ss') as updatedDt from feli_dev.tasks order by createdDt",
+    sql: "SELECT *, DATE_FORMAT(__createdtime__, 'YYYY-MM-DD HH:mm:ss') as createdDt, DATE_FORMAT(__updatedtime__, 'YYYY-MM-DD HH:mm:ss') as updatedDt from feli_dev.tasks order by position",
   });
 
   const requestOptions = {
@@ -96,6 +96,7 @@ export const createTask = async (task) => {
         completeDt: null,
         description: task.description,
         dueDt: task.dueDt,
+        position: task.position,
         priority: task.priority,
         regUser: task.regUser,
         status: task.status,
@@ -141,6 +142,26 @@ export const deleteTask = async (id) => {
   } catch (err) {
     return { error: err };
   }
+};
+
+export const updateTask = async (data) => {
+  const raw = JSON.stringify({
+    operation: "update",
+    schema: "feli_dev",
+    table: "tasks",
+    records: data,
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  const response = await fetch(process.env.DB_URL, requestOptions);
+  const result = await response.json();
+  return { response, result };
 };
 
 // ************** POST API  ************** //

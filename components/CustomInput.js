@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import { useState } from "react";
 
-const inputStyle = {
+export const inputStyle = {
   textField: {
     minHeight: 40,
     minWidth: 150,
@@ -70,6 +70,7 @@ export default function CustomInput(props) {
     multiline = false,
     minRows = 1,
     maxRows = 1,
+    maxLength,
   } = props;
   const [error, setError] = useState(false);
 
@@ -88,6 +89,9 @@ export default function CustomInput(props) {
       multiline={multiline}
       error={error}
       autoComplete="off"
+      inputProps={{
+        maxLength: maxLength,
+      }}
       placeholder={placeholder}
       onBlur={(e) => verifyValue(e.target.value)}
       onChange={(e) => onChangeValue(e.target.value)}

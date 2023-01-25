@@ -131,3 +131,9 @@
   max-height: 120px;
   overflow: overlay;
 }
+
+/** date picker styles **/
+
+.calendar .MuiIconButton-root {
+  margin-right: 0;
+}

@@ -19,14 +19,18 @@ const useStyles = {
     },
     "& > .card-title": {
       color: "#2F476A",
-      fontSize: "20px",
+      fontSize: "22px",
       fontWeight: 600,
       padding: "20px",
       minHeight: 70,
+      maxWidth: "calc(100% - 30px)",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
     },
     "& > .description": {
-      color: "#7C8993",
-      fontSize: "14px",
+      color: "#222",
+      fontSize: "16px",
       margin: "0px 20px 10px 20px",
       minHeight: 54,
     },
@@ -67,7 +71,7 @@ const useStyles = {
   },
 };
 
-export default function TaskCard({ data, updateData }) {
+export default function TaskCard({ data, onDeleteUpdate }) {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   let color = "#BCD1A2";
@@ -90,7 +94,7 @@ export default function TaskCard({ data, updateData }) {
   const onDelete = async () => {
     deleteTask({ id: data.id }).then((res) => {
       if (res["deleted_hashes"] && res["deleted_hashes"] !== null) {
-        updateData();
+        onDeleteUpdate();
       }
     });
     setOpenConfirm(false);
